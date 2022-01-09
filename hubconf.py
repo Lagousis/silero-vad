@@ -74,13 +74,11 @@ def silero_lang_detector_95(onnx=False):
     Returns a model with a set of utils
     Please see https://github.com/snakers4/silero-vad for usage examples
     """
-
     hub_dir = torch.hub.get_dir()
     if onnx:
-        url = 'https://models.silero.ai/vad_models/lang_classifier_95.onnx'
+        model = OnnxWrapper(f'{hub_dir}/Lagousis_silero-vad_master/files/lang_classifier_95.onnx')
     else:
-        url = 'https://models.silero.ai/vad_models/lang_classifier_95.jit'
-    model = Validator(url)
+        model = init_jit_model(model_path=f'{hub_dir}/Lagousis_silero-vad_master/files/lang_classifier_95.jit')
 
     with open(f'{hub_dir}/Lagousis_silero-vad_master/files/lang_dict_95.json', 'r') as f:
         lang_dict = json.load(f)
