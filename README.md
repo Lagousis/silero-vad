@@ -8,6 +8,11 @@
 <h1 align="center">Silero VAD</h1>
 <br/>
 
+**Pobuca** - Added language detection model (95 languages) in files and replaced Validator with local loading. Validator class in utils_vad downloads model every time, so it was replaced by local loading of the model from "files" directory.
+
+<hr>
+<br/>
+
 **Silero VAD** - pre-trained enterprise-grade [Voice Activity Detector](https://en.wikipedia.org/wiki/Voice_activity_detection) (also see our [STT models](https://github.com/snakers4/silero-models)).
 
 This repository also includes Number Detector and Language classifier [models](https://github.com/snakers4/silero-vad/wiki/Other-Models)
