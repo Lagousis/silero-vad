@@ -89,3 +89,35 @@ def silero_lang_detector_95(onnx=False):
     utils = (get_language_and_group, read_audio)
 
     return model, lang_dict, lang_group_dict, utils
+
+
+def silero_vad_mini(**kwargs):
+    """Silero Voice Activity Detector
+    Returns a model with a set of utils
+    Please see https://github.com/snakers4/silero-vad for usage examples
+    """
+    hub_dir = torch.hub.get_dir()
+    model = init_jit_model(model_path=f'{hub_dir}/Lagousis_silero-vad_master/files/model_mini.jit')
+    utils = (get_speech_timestamps,
+             save_audio,
+             read_audio,
+             VADIterator,
+             collect_chunks)
+
+    return model, utils
+
+
+def silero_vad_mini_8k(**kwargs):
+    """Silero Voice Activity Detector
+    Returns a model with a set of utils
+    Please see https://github.com/snakers4/silero-vad for usage examples
+    """
+    hub_dir = torch.hub.get_dir()
+    model = init_jit_model(model_path=f'{hub_dir}/Lagousis_silero-vad_master/files/model_mini_8k.jit')
+    utils = (get_speech_timestamps,
+             save_audio,
+             read_audio,
+             VADIterator,
+             collect_chunks)
+
+    return model, utils
