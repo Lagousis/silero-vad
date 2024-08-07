@@ -1,19 +1,21 @@
 dependencies = ['torch', 'torchaudio']
 import torch
-import json
 import os
-from utils_vad import (init_jit_model,
-                       get_speech_timestamps,
-                       get_number_ts,
-                       get_language,
-                       get_language_and_group,
-                       save_audio,
-                       read_audio,
-                       VADIterator,
-                       collect_chunks,
-                       drop_chunks,
-                       Validator,
-                       OnnxWrapper)
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+import json
+from silero_vad.utils_vad import (init_jit_model,
+                                  get_speech_timestamps,
+                                  get_number_ts,
+                                  get_language,
+                                  get_language_and_group,
+                                  save_audio,
+                                  read_audio,
+                                  VADIterator,
+                                  collect_chunks,
+                                  drop_chunks,
+                                  Validator,
+                                  OnnxWrapper)
 
 
 def versiontuple(v):
@@ -39,7 +41,7 @@ def silero_vad(onnx=False, force_onnx_cpu=False):
         if versiontuple(installed_version) < versiontuple(supported_version):
             raise Exception(f'Please install torch {supported_version} or greater ({installed_version} installed)')
 
-    model_dir = os.path.join(os.path.dirname(__file__), 'files')
+    model_dir = os.path.join(os.path.dirname(__file__), 'src', 'silero_vad', 'data')
     if onnx:
         model = OnnxWrapper(os.path.join(model_dir, 'silero_vad.onnx'), force_onnx_cpu)
     else:
@@ -95,16 +97,16 @@ def silero_lang_detector_95(onnx=False, force_onnx_cpu=False):
     Returns a model with a set of utils
     Please see https://github.com/snakers4/silero-vad for usage examples
     """
-    hub_dir = torch.hub.get_dir()
+    model_dir = os.path.join(os.path.dirname(__file__), 'src', 'silero_vad', 'data')
     if onnx:
-        model = OnnxWrapper(f'{hub_dir}/Lagousis_silero-vad_master/files/lang_classifier_95.onnx', force_onnx_cpu)
+        model = OnnxWrapper(os.path.join(model_dir, 'lang_classifier_95.onnx'), force_onnx_cpu)
     else:
-        model = init_jit_model(model_path=f'{hub_dir}/Lagousis_silero-vad_master/files/lang_classifier_95.jit')
+        model = init_jit_model(os.path.join(model_dir, 'lang_classifier_95.jit'))
 
-    with open(f'{hub_dir}/Lagousis_silero-vad_master/files/lang_dict_95.json', 'r') as f:
+    with open(f'{model_dir}/lang_dict_95.json', 'r') as f:
         lang_dict = json.load(f)
 
-    with open(f'{hub_dir}/Lagousis_silero-vad_master/files/lang_group_dict_95.json', 'r') as f:
+    with open(f'{model_dir}/lang_group_dict_95.json', 'r') as f:
         lang_group_dict = json.load(f)
 
     utils = (get_language_and_group, read_audio)
